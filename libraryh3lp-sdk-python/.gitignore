@@ -1,0 +1,6 @@
+*.pyc
+.python-version
+.venv*
+build/
+dist/
+lh3api.egg-info/
