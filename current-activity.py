@@ -5,6 +5,11 @@
 # Count the number of active chats and the number of librarians that
 # are staffing services.
 
+# install:
+# sudo pip install adafruit-io
+# git clone https://github.com/GeorgetownMakerHubOrg/libraryh3lpListener.git
+## get the libraryh3lp-sdk-python in the same folder as this file.
+
 from datetime import datetime
 # Import standard python modules
 import time
@@ -13,11 +18,12 @@ import time
 from Adafruit_IO import Client, Feed
 
 import lh3.api
+import secrets
 
 # Set to your Adafruit IO key.
 # Remember, your key is a secret,
 # so make sure not to publish it when you publish this code!
-ADAFRUIT_IO_KEY = ''
+ADAFRUIT_IO_KEY = secrets.AIO_KEY
 
 # Set to your Adafruit IO username.
 # (go to https://accounts.adafruit.com to find your username)
