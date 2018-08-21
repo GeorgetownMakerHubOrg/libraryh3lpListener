@@ -32,41 +32,44 @@ ADAFRUIT_IO_FEEDNAME = 'makerhubevents.signagemessage'
 
 # Create an instance of the REST client.
 aio = Client(ADAFRUIT_IO_USERNAME, ADAFRUIT_IO_KEY)
-
-
 client = lh3.api.Client()
 
-# Fetch today's chats.
-now = datetime.now()
-chats = client.chats().list_day(now.year, now.month, now.day)
 
-num_active = 0
-num_unanswered = 0
-for chat in chats:
-    print(chat)
-    if chat['ended']:
-        continue
-    if chat['queue'] != 'gt-makerhub':
-        continue
 
-    # Only count those starting in the last 15 minutes.
-    started = datetime.strptime(chat['started'], '%Y-%m-%d %H:%M:%S')
-    if (now - started).total_seconds() >= 900:
-        continue
 
-    if chat['accepted']:
-        num_active += 1
-    else:
-        num_unanswered += 1
-        print("this unanswered chat")
-        print(chat['queue'])
+while True:
+    # Fetch today's chats.
+    now  = datetime.now()
+    chats = client.chats().list_day(now.year, now.month, now.day)
 
-print('{} active chats, {} unanswered'.format(num_active, num_unanswered))
+    num_active = 0
+    num_unanswered = 0
+    for chat in chats:
+        print(chat)
+        if chat['ended']:
+            continue
+        if chat['queue'] != 'gt-makerhub':
+            continue
 
-if num_unanswered > 0:
-    print ("SEND AN ALERT NOW!!!")
-    aio.send_data(ADAFRUIT_IO_FEEDNAME, "Incoming Chat!")
+        # Only count those starting in the last 15 minutes.
+        started = datetime.strptime(chat['started'], '%Y-%m-%d %H:%M:%S')
+        if (now - started).total_seconds() >= 900:
+            continue
 
+        if chat['accepted']:
+            num_active += 1
+        else:
+            num_unanswered += 1
+            print("this unanswered chat")
+            print(chat['queue'])
+
+    print('{} active chats, {} unanswered'.format(num_active, num_unanswered))
+
+    if num_unanswered > 0:
+        print ("SEND AN ALERT NOW!!!")
+        aio.send_data(ADAFRUIT_IO_FEEDNAME, "Incoming Chat!")
+
+    time.sleep(10)
 
 
 
